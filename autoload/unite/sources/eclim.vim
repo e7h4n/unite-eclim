@@ -90,7 +90,8 @@ function! s:source_eclim.change_candidates(args, context) "{{{
 
   for result in results
     call add(candidates, {
-          \ 'word' : result.path
+          \ 'word' : result.path,
+          \ 'action__path': result.path
           \})
   endfor
 
