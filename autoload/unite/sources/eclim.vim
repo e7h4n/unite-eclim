@@ -70,6 +70,10 @@ function! s:source_eclim.change_candidates(args, context) "{{{
   let input = s:LocateFileConvertPattern(input, 0)
   let input = '[^/]*' . input
 
+  if !exists('eclim#client#nailgun#ChooseEclimdInstance')
+      return []
+  endif
+
   let instance = eclim#client#nailgun#ChooseEclimdInstance()
   if type(instance) != g:DICT_TYPE
       return []
