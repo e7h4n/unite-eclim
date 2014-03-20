@@ -66,23 +66,25 @@ function! s:LocateFileConvertPattern(pattern, fuzzy) " {{{
 endfunction " }}}
 
 function! s:source_eclim.change_candidates(args, context) "{{{
-  let input = a:context.input
-  let input = s:LocateFileConvertPattern(input, 0)
-  let input = '[^/]*' . input
+  if !exists(':PingEclim')
+      return []
+  endif
 
-  if !exists('eclim#client#nailgun#ChooseEclimdInstance')
+  if !eclim#PingEclim(0)
       return []
   endif
 
   let instance = eclim#client#nailgun#ChooseEclimdInstance()
+
   if type(instance) != g:DICT_TYPE
       return []
   endif
 
   let workspace = instance.workspace
-  if !eclim#PingEclim(0, workspace)
-      return []
-  endif
+
+  let input = a:context.input
+  let input = s:LocateFileConvertPattern(input, 0)
+  let input = '[^/]*' . input
 
   let command = substitute(s:LocateFileCommand(input), '<scope>', 'workspace', '')
   let results = eclim#Execute(command, {'workspace': workspace})
